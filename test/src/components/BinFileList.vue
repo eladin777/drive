@@ -24,7 +24,17 @@
   </div>
 
 
-  <el-empty :image-size="200" style="margin-top: 20%;" v-show="folder_list.folder_data.length===0&file_list.file_data.length===0" description="无文件" />
+  <!--↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ 空文件显示图标，需要用响应式ref数据来控制dom的显示，直接判断response data的长度会导致在刷新文件列表前意外地显示空文件图标  "empty_file===true&&empty_folder===true"-->
+  <div style="position: relative;width: 100%;margin-top:25%;text-align: center" v-show="empty_file===true&&empty_folder===true">
+    <img  style="width: 200px;height: 200px;display: inline-block;vertical-align: middle;" src="../assets/empty.png">
+  </div>
+  <div style="position: relative;width: 100%;text-align: center" v-show="empty_file===true&&empty_folder===true">
+    <p  style="width: 70px;color: #565656;display: inline-block;vertical-align: middle;margin-top: 0;font-size: 15px">无文件</p>
+  </div>
+  <!--↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑空文件显示图标，需要用响应式ref数据来控制dom的显示，直接判断response data的长度会导致在刷新文件列表前意外地显示空文件图标  "empty_file===true&&empty_folder===true"-  -->
+
+
+<!--  <el-empty  image="../asset/empty.png" :image-size="200" style="margin-top: 20%;" v-show="folder_list.folder_data.length===0&file_list.file_data.length===0" description="无文件" />-->
 
 
   <div id="file_display_area" :style="store.state.SideBar_isOpen? 'width:calc(100% - 280px)' : ' width:calc(100% - 42px)'"><!--    获取ｖｕｅｘ状态值（菜单是否折叠），以此依据改变文件显示区域的宽度-->
@@ -269,6 +279,9 @@ import store from "@/store";
 import {ElMessage, ElMessageBox} from "element-plus";
 
 
+let empty_file=ref(false);
+let empty_folder=ref(false);
+
 let folder_list=reactive({folder_data:[]});
 let file_list=reactive({file_data:[]});
 
@@ -370,7 +383,6 @@ function handleCheckAllChange (val)
 /////↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑   element plus 多选框相关操作
 
 
-
 // const open_state=ref(store.state.SideBar_isOpen);vuex状态值的变化不会引起ｒｅｆ数值变化
 
 //将后端传的kb数字转成标准大小显示
@@ -387,10 +399,6 @@ function size_convert(size) {//把字节转换成正常文件大小
     return (size / Math.pow(num, 3)).toFixed(2) + "G"; //G
   return (size / Math.pow(num, 4)).toFixed(2) + "T"; //T
 }
-
-
-
-
 
 
 function restore_file(file_name)
@@ -414,11 +422,15 @@ function restore_file(file_name)
         }
 
       }).then(function (response) {
-        if (!response.data)//////java返回null，浏览器为undefined
+
+        file_list.file_data = response.data;
+        if(response.data.length===0)//////java返回null，浏览器为undefined
         {
-          // error_password_alert();
-        } else {
-          file_list.file_data = response.data;
+          empty_file.value=true;
+        }
+        else
+        {
+          empty_file.value=false;
         }
       })
 
@@ -428,11 +440,14 @@ function restore_file(file_name)
         }
 
       }).then(function (response) {
-        if (!response.data)//////java返回null，浏览器为undefined
+        folder_list.folder_data = response.data;
+        if(response.data.length===0)//////java返回null，浏览器为undefined
         {
-          // error_password_alert();
-        } else {
-          folder_list.folder_data = response.data;
+          empty_folder.value=true;
+        }
+        else
+        {
+          empty_folder.value=false;
         }
       })
     }
@@ -467,11 +482,14 @@ function restore_multi_files()
         }
 
       }).then(function (response) {
-        if (!response.data)//////java返回null，浏览器为undefined
+        file_list.file_data = response.data;
+        if(response.data.length===0)//////java返回null，浏览器为undefined
         {
-          // error_password_alert();
-        } else {
-          file_list.file_data = response.data;
+          empty_file.value=true;
+        }
+        else
+        {
+          empty_file.value=false;
         }
       })
 
@@ -481,11 +499,14 @@ function restore_multi_files()
         }
 
       }).then(function (response) {
-        if (!response.data)//////java返回null，浏览器为undefined
+        folder_list.folder_data = response.data;
+        if(response.data.length===0)//////java返回null，浏览器为undefined
         {
-          // error_password_alert();
-        } else {
-          folder_list.folder_data = response.data;
+          empty_folder.value=true;
+        }
+        else
+        {
+          empty_folder.value=false;
         }
       })
     }
@@ -531,11 +552,14 @@ const open_delete_file_completely_message_box= (file_name) =>{
             }
 
           }).then(function (response) {
-            if (!response.data)//////java返回null，浏览器为undefined
+            file_list.file_data = response.data;
+            if(response.data.length===0)//////java返回null，浏览器为undefined
             {
-              // error_password_alert();
-            } else {
-              file_list.file_data = response.data;
+              empty_file.value=true;
+            }
+            else
+            {
+              empty_file.value=false;
             }
           })
 
@@ -545,11 +569,14 @@ const open_delete_file_completely_message_box= (file_name) =>{
             }
 
           }).then(function (response) {
-            if (!response.data)//////java返回null，浏览器为undefined
+            folder_list.folder_data = response.data;
+            if(response.data.length===0)//////java返回null，浏览器为undefined
             {
-              // error_password_alert();
-            } else {
-              folder_list.folder_data = response.data;
+              empty_folder.value=true;
+            }
+            else
+            {
+              empty_folder.value=false;
             }
           })
          cancel_multi_files_select()
@@ -585,11 +612,14 @@ const open_delete_multi_files_completely_message_box= () =>{
             }
 
           }).then(function (response) {
-            if (!response.data)//////java返回null，浏览器为undefined
+            file_list.file_data = response.data;
+            if(response.data.length===0)//////java返回null，浏览器为undefined
             {
-              // error_password_alert();
-            } else {
-              file_list.file_data = response.data;
+              empty_file.value=true;
+            }
+            else
+            {
+              empty_file.value=false;
             }
           })
 
@@ -599,11 +629,14 @@ const open_delete_multi_files_completely_message_box= () =>{
             }
 
           }).then(function (response) {
-            if (!response.data)//////java返回null，浏览器为undefined
+            folder_list.folder_data = response.data;
+            if(response.data.length===0)//////java返回null，浏览器为undefined
             {
-              // error_password_alert();
-            } else {
-              folder_list.folder_data = response.data;
+              empty_folder.value=true;
+            }
+            else
+            {
+              empty_folder.value=false;
             }
           })
           // checked_files_group.value=[];
@@ -641,11 +674,15 @@ onBeforeMount(()=> {
     }
 
   }).then(function (response) {
-    if (!response.data)//////java返回null，浏览器为undefined
+
+    file_list.file_data = response.data;
+    if(response.data.length===0)//////java返回null，浏览器为undefined
     {
-      // error_password_alert();
-    } else {
-      file_list.file_data = response.data;
+      empty_file.value=true;
+    }
+    else
+    {
+      empty_file.value=false;
     }
   })
 
@@ -655,31 +692,34 @@ onBeforeMount(()=> {
     }
 
   }).then(function (response) {
-    if (!response.data)//////java返回null，浏览器为undefined
+    folder_list.folder_data = response.data;
+    if(response.data.length===0)//////java返回null，浏览器为undefined
     {
-      // error_password_alert();
-    } else {
-      folder_list.folder_data = response.data;
+      empty_folder.value=true;
+    }
+    else
+    {
+      empty_folder.value=false;
     }
   })
 })
 
-watch(()=>store.state.have_confirmed_create_folder,()=>
-{
-  axios.get("/home_folder", {
-    params: {
-      user_name: cookie.get("user_name")
-    }
-  }).then(function (response) {
-    if (!response.data)//////java返回null，浏览器为undefined
-    {
-      // error_password_alert();
-    } else {
-      folder_list.folder_data = response.data;
-    }
-  })
-  store.commit("set_have_confirmed_create_folder",false);
-})
+// watch(()=>store.state.have_confirmed_create_folder,()=>
+// {
+//   axios.get("/home_folder", {
+//     params: {
+//       user_name: cookie.get("user_name")
+//     }
+//   }).then(function (response) {
+//     if (!response.data)//////java返回null，浏览器为undefined
+//     {
+//       // error_password_alert();
+//     } else {
+//       folder_list.folder_data = response.data;
+//     }
+//   })
+//   store.commit("set_have_confirmed_create_folder",false);
+// })
 
 // //监听router的url变化，变了就发送请求重新获取列表
 // watch(()=>route.path,()=>

@@ -41,13 +41,18 @@
   </div>
 
 
-  <el-empty :image-size="200" style="margin-top: 20%;" v-show="empty_file&empty_folder" description="无文件" />
 
+  <!--↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ 空文件显示图标，需要用响应式ref数据来控制dom的显示，直接判断response data的长度会导致在刷新文件列表前意外地显示空文件图标  "empty_file===true&&empty_folder===true"-->
+  <div style="position: relative;width: 100%;margin-top:25%;text-align: center" v-show="empty_file===true&&empty_folder===true">
+    <img  style="width: 200px;height: 200px;display: inline-block;vertical-align: middle;" src="../assets/empty.png">
+  </div>
+  <div style="position: relative;width: 100%;text-align: center" v-show="empty_file===true&&empty_folder===true">
+    <p  style="width: 70px;color: #565656;display: inline-block;vertical-align: middle;margin-top: 0;font-size: 15px">无文件</p>
+  </div>
+  <!--↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑空文件显示图标，需要用响应式ref数据来控制dom的显示，直接判断response data的长度会导致在刷新文件列表前意外地显示空文件图标  "empty_file===true&&empty_folder===true"-  -->
 
 
   <div id="file_display_area" :style="store.state.SideBar_isOpen? 'width:calc(100% - 280px)' : ' width:calc(100% - 42px)'"><!--    获取ｖｕｅｘ状态值（菜单是否折叠），以此依据改变文件显示区域的宽度-->
-
-
     <el-scrollbar>
       <!--↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ 大图标显示区域 -->
       <div class="" v-show="store.state.enable_big_icon_mode" style="display: flex;flex-direction:row;justify-content: flex-start;flex-wrap:wrap;width: 99%;">
@@ -783,7 +788,7 @@ function move_file_to_recycle_bin(file_path)
 
       }).then(function (response) {
         folder_list.folder_data=response.data;
-
+        sort_file();
         if(response.data.length===0)//////java返回null，浏览器为undefined
         {
           empty_folder.value=true;
@@ -802,7 +807,7 @@ function move_file_to_recycle_bin(file_path)
 
       }).then(function (response) {
         file_list.file_data=response.data;
-
+        sort_file();
         if(response.data.length===0)//////java返回null，浏览器为undefined
         {
           empty_file.value=true;

@@ -21,6 +21,16 @@
 
   </div>
 
+  <!--↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ 空文件显示图标，需要用响应式ref数据来控制dom的显示，直接判断response data的长度会导致在刷新文件列表前意外地显示空文件图标  "empty_file===true"-->
+  <div style="position: relative;width: 100%;margin-top:25%;text-align: center" v-show="empty_file===true">
+    <img  style="width: 200px;height: 200px;display: inline-block;vertical-align: middle;" src="../assets/empty.png">
+  </div>
+  <div style="position: relative;width: 100%;text-align: center" v-show="empty_file===true">
+    <p  style="width: 70px;color: #565656;display: inline-block;vertical-align: middle;margin-top: 0;font-size: 15px">无文件</p>
+  </div>
+  <!--↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑空文件显示图标，需要用响应式ref数据来控制dom的显示，直接判断response data的长度会导致在刷新文件列表前意外地显示空文件图标  "empty_file===true&&empty_folder===true"-  -->
+
+
   <div id="file_display_area" :style="store.state.SideBar_isOpen? 'width:calc(100% - 280px)' : ' width:calc(100% - 42px)'"><!--    获取ｖｕｅｘ状态值（菜单是否折叠），以此依据改变文件显示区域的宽度-->
 
     <el-scrollbar>
@@ -215,24 +225,25 @@ let ShowShareLinkDialogVisible =ref(false);
 let ShareFileDialogVisible_multi_files =ref(false);
 
 
+let empty_file=ref(false);
 
 let file_suffix_name=ref("");
 
 let ellipsis_is_hover=ref(false);
 
-let file_name_in_edit_name_dialog = ref("");
-let old_file_path=ref("");
-let  old_file_suffix=ref("");
-
-
-let have_crumbs_in_move_file_dialog=ref(false);
-let crumbs_path_in_move_file_dialog=reactive({crumbs_data:[]});
-let folder_list_in_move_file_dialog=reactive({folder_data:[]});
-let empty_folder_in_move_file_dialog=ref(false);
-let source_file_path=ref("");
-let destination_folder_path=ref("");
-
-let multi_files_state=ref(false);
+// let file_name_in_edit_name_dialog = ref("");
+// let old_file_path=ref("");
+// let  old_file_suffix=ref("");
+//
+//
+// let have_crumbs_in_move_file_dialog=ref(false);
+// let crumbs_path_in_move_file_dialog=reactive({crumbs_data:[]});
+// let folder_list_in_move_file_dialog=reactive({folder_data:[]});
+// let empty_folder_in_move_file_dialog=ref(false);
+// let source_file_path=ref("");
+// let destination_folder_path=ref("");
+//
+// let multi_files_state=ref(false);
 
 
 ////↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ 预览视频和图片
@@ -406,17 +417,17 @@ function cancel_share(file)
       params: {
         user_name: cookie.get("user_name")
       }
-
     }).then(function (response) {
-      if (!response.data)//////java返回null，浏览器为undefined
+      file_list.file_data = response.data;
+      if(response.data.length===0)//////java返回null，浏览器为undefined
       {
-        // error_password_alert();
-      } else {
-        file_list.file_data = response.data;
-
+        empty_file.value=true;
+      }
+      else
+      {
+        empty_file.value=false;
       }
     })
-
   })
 }
 function cancel_multi_share()
@@ -432,12 +443,14 @@ function cancel_multi_share()
       }
 
     }).then(function (response) {
-      if (!response.data)//////java返回null，浏览器为undefined
+      file_list.file_data = response.data;
+      if(response.data.length===0)//////java返回null，浏览器为undefined
       {
-        // error_password_alert();
-      } else {
-        file_list.file_data = response.data;
-
+        empty_file.value=true;
+      }
+      else
+      {
+        empty_file.value=false;
       }
     })
 
@@ -489,12 +502,14 @@ onBeforeMount(()=> {
     }
 
   }).then(function (response) {
-    if (!response.data)//////java返回null，浏览器为undefined
+    file_list.file_data = response.data;
+    if(response.data.length===0)//////java返回null，浏览器为undefined
     {
-      // error_password_alert();
-    } else {
-      file_list.file_data = response.data;
-      console.log(response.data)
+      empty_file.value=true;
+    }
+    else
+    {
+      empty_file.value=false;
     }
   })
 

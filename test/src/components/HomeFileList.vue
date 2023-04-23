@@ -30,8 +30,6 @@
           <svg fill="currentColor" style="color:#575757;width: 15px;height: 15px;margin-bottom: -6px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Pro 6.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M27.66 224h264.7c24.6 0 36.89-29.78 19.54-47.12l-132.3-136.8c-5.406-5.406-12.47-8.107-19.53-8.107c-7.055 0-14.09 2.701-19.45 8.107L8.119 176.9C-9.229 194.2 3.055 224 27.66 224z"/></svg>
         </td>
 
-
-
         <td v-show="store.state.sort_state.includes('desc')"  style="font-size: 7px;color: #727272;width: 11.7%" v-on:click="set_file_size_order_asc()" class="attribute-td" >
           <span>大小</span>
           <svg fill="currentColor"  style="color:#575757;width: 15px;height: 15px;margin-bottom: -1px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Pro 6.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M311.9 335.1l-132.4 136.8C174.1 477.3 167.1 480 160 480c-7.055 0-14.12-2.702-19.47-8.109l-132.4-136.8C-9.229 317.8 3.055 288 27.66 288h264.7C316.9 288 329.2 317.8 311.9 335.1z"/></svg>
@@ -43,11 +41,19 @@
 
       </tr>
     </table>
-
   </div>
 
-  <div id="file_display_area" :style="store.state.SideBar_isOpen? 'width:calc(100% - 280px)' : ' width:calc(100% - 42px)'"><!--    获取ｖｕｅｘ状态值（菜单是否折叠），以此依据改变文件显示区域的宽度-->
+  <!--↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ 空文件显示图标，需要用响应式ref数据来控制dom的显示，直接判断response data的长度会导致在刷新文件列表前意外地显示空文件图标  "empty_file===true&&empty_folder===true"-->
+  <div style="position: relative;width: 100%;margin-top:25%;text-align: center" v-show="empty_file===true&&empty_folder===true">
+    <img  style="width: 200px;height: 200px;display: inline-block;vertical-align: middle;" src="../assets/empty.png">
+  </div>
+  <div style="position: relative;width: 100%;text-align: center" v-show="empty_file===true&&empty_folder===true">
+    <p  style="width: 70px;color: #565656;display: inline-block;vertical-align: middle;margin-top: 0;font-size: 15px">无文件</p>
+  </div>
+  <!--↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑空文件显示图标，需要用响应式ref数据来控制dom的显示，直接判断response data的长度会导致在刷新文件列表前意外地显示空文件图标  "empty_file===true&&empty_folder===true"-  -->
 
+
+  <div id="file_display_area" :style="store.state.SideBar_isOpen? 'width:calc(100% - 280px)' : ' width:calc(100% - 42px)'"><!--    获取ｖｕｅｘ状态值（菜单是否折叠），以此依据改变文件显示区域的宽度-->
     <el-scrollbar>
       <!--↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ 大图标显示区域 -->
       <div class="" v-show="store.state.enable_big_icon_mode" style="display: flex;flex-direction:row;justify-content: flex-start;flex-wrap:wrap;width: 99%;">
@@ -459,6 +465,8 @@ let ShowShareLinkDialogVisible =ref(false);
 
 
 
+let empty_file=ref(false);
+let empty_folder=ref(false);
 
 let file_suffix_name=ref("");
 
@@ -801,14 +809,16 @@ function move_file_to_recycle_bin(file_path)
         }
 
       }).then(function (response) {
-        if(!response.data)//////java返回null，浏览器为undefined
+        // if(!response.data)//////java返回null，浏览器为undefined
+        file_list.file_data=response.data;
+        sort_file();
+        if(response.data.length===0)//////java返回null，浏览器为undefined
         {
-          // error_password_alert();
+          empty_file.value=true;
         }
         else
         {
-          file_list.file_data=response.data;
-          sort_file();
+          empty_file.value=false;
         }
       })
 
@@ -818,15 +828,19 @@ function move_file_to_recycle_bin(file_path)
         }
 
       }).then(function (response) {
-        if(!response.data)//////java返回null，浏览器为undefined
+
+        folder_list.folder_data=response.data;
+        sort_file();
+
+        if(response.data.length===0)//////java返回null，浏览器为undefined
         {
-          // error_password_alert();
+          empty_folder.value=true;
         }
         else
         {
-          folder_list.folder_data=response.data;
-          sort_file();
+          empty_folder.value=false;
         }
+
       })
     }
     else
@@ -862,13 +876,15 @@ function move_multi_files_to_recycle_bin()
         }
 
       }).then(function (response) {
-        if(!response.data)//////java返回null，浏览器为undefined
+        file_list.file_data=response.data;
+        sort_file();
+        if(response.data.length===0)//////java返回null，浏览器为undefined
         {
-          // error_password_alert();
+          empty_file.value=true;
         }
         else
         {
-          file_list.file_data=response.data;
+          empty_file.value=false;
         }
       })
 
@@ -878,13 +894,16 @@ function move_multi_files_to_recycle_bin()
         }
 
       }).then(function (response) {
-        if(!response.data)//////java返回null，浏览器为undefined
+
+        folder_list.folder_data=response.data;
+        sort_file();
+        if(response.data.length===0)//////java返回null，浏览器为undefined
         {
-          // error_password_alert();
+          empty_folder.value=true;
         }
         else
         {
-          folder_list.folder_data=response.data;
+          empty_folder.value=false;
         }
       })
     }
@@ -938,8 +957,6 @@ function confirm_edit_name(old_file_path,new_file_name)
       })
 
       // store.commit('set_crumbs_path',null);
-
-
       //名字修改后再发送更新列表请求来迅速更新列表
       axios.get("/home_file", {
         params:{
@@ -947,14 +964,15 @@ function confirm_edit_name(old_file_path,new_file_name)
         }
 
       }).then(function (response) {
-        if(!response.data)//////java返回null，浏览器为undefined
+        file_list.file_data=response.data;
+        sort_file();
+        if(response.data.length===0)//////java返回null，浏览器为undefined
         {
-          // error_password_alert();
+          empty_file.value=true;
         }
         else
         {
-          file_list.file_data=response.data;
-          sort_file();
+          empty_file.value=false;
         }
       })
 
@@ -964,14 +982,15 @@ function confirm_edit_name(old_file_path,new_file_name)
         }
 
       }).then(function (response) {
-        if(!response.data)//////java返回null，浏览器为undefined
+        folder_list.folder_data=response.data;
+        sort_file();
+        if(response.data.length===0)//////java返回null，浏览器为undefined
         {
-          // error_password_alert();
+          empty_folder.value=true;
         }
         else
         {
-          folder_list.folder_data=response.data;
-          sort_file();
+          empty_folder.value=false;
         }
       })
     }
@@ -1121,13 +1140,17 @@ function confirm_move_file()
             }
 
           }).then(function (response) {
-            if (!response.data)//////java返回null，浏览器为undefined
+            file_list.file_data = response.data;
+            sort_file()
+            if(response.data.length===0)//////java返回null，浏览器为undefined
             {
-              // error_password_alert();
-            } else {
-              file_list.file_data = response.data;
-              sort_file()
+              empty_file.value=true;
             }
+            else
+            {
+              empty_file.value=false;
+            }
+
           })
 
           axios.get("/home_folder", {
@@ -1136,12 +1159,15 @@ function confirm_move_file()
             }
 
           }).then(function (response) {
-            if (!response.data)//////java返回null，浏览器为undefined
+            folder_list.folder_data = response.data;
+            sort_file()
+            if(response.data.length===0)//////java返回null，浏览器为undefined
             {
-              // error_password_alert();
-            } else {
-              folder_list.folder_data = response.data;
-              sort_file()
+              empty_folder.value=true;
+            }
+            else
+            {
+              empty_folder.value=false;
             }
           })
         }
@@ -1157,7 +1183,6 @@ else
           source_file_path: source_file_path.value,
           destination_folder_path:destination_folder_path.value
         }
-
       }).then(function (response) {
         if (!response.data)//////java返回null，浏览器为undefined
         {
@@ -1175,14 +1200,16 @@ else
             params: {
               user_name: cookie.get("user_name")
             }
-
           }).then(function (response) {
-            if (!response.data)//////java返回null，浏览器为undefined
+            file_list.file_data = response.data;
+            sort_file()
+            if(response.data.length===0)//////java返回null，浏览器为undefined
             {
-              // error_password_alert();
-            } else {
-              file_list.file_data = response.data;
-              sort_file()
+              empty_file.value=true;
+            }
+            else
+            {
+              empty_file.value=false;
             }
           })
 
@@ -1192,12 +1219,15 @@ else
             }
 
           }).then(function (response) {
-            if (!response.data)//////java返回null，浏览器为undefined
+            folder_list.folder_data = response.data;
+            sort_file()
+            if(response.data.length===0)//////java返回null，浏览器为undefined
             {
-              // error_password_alert();
-            } else {
-              folder_list.folder_data = response.data;
-              sort_file()
+              empty_folder.value=true;
+            }
+            else
+            {
+              empty_folder.value=false;
             }
           })
         }
@@ -1252,12 +1282,16 @@ onBeforeMount(()=> {
     }
 
   }).then(function (response) {
-    if (!response.data)//////java返回null，浏览器为undefined
+
+    file_list.file_data = response.data;
+    sort_file()
+    if(response.data.length===0)//////java返回null，浏览器为undefined
     {
-      // error_password_alert();
-    } else {
-      file_list.file_data = response.data;
-     sort_file()
+      empty_file.value=true;
+    }
+    else
+    {
+      empty_file.value=false;
     }
   })
 
@@ -1267,12 +1301,15 @@ onBeforeMount(()=> {
     }
 
   }).then(function (response) {
-    if (!response.data)//////java返回null，浏览器为undefined
+    folder_list.folder_data = response.data;
+    sort_file()
+    if(response.data.length===0)//////java返回null，浏览器为undefined
     {
-      // error_password_alert();
-    } else {
-      folder_list.folder_data = response.data;
-      sort_file()
+      empty_folder.value=true;
+    }
+    else
+    {
+      empty_folder.value=false;
     }
   })
 
