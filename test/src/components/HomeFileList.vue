@@ -1347,12 +1347,15 @@ watch(()=>store.state.one_file_has_been_uploaded,()=>
       }
 
     }).then(function (response) {
-      if (!response.data)//////java返回null，浏览器为undefined
+      file_list.file_data = response.data;
+      sort_file()
+      if(response.data.length===0)//////java返回null，浏览器为undefined
       {
-        // error_password_alert();
-      } else {
-        file_list.file_data = response.data;
-        sort_file()
+        empty_file.value=true;
+      }
+      else
+      {
+        empty_file.value=false;
       }
     })
 
@@ -1362,12 +1365,15 @@ watch(()=>store.state.one_file_has_been_uploaded,()=>
       }
 
     }).then(function (response) {
-      if (!response.data)//////java返回null，浏览器为undefined
+      folder_list.folder_data = response.data;
+      sort_file()
+      if(response.data.length===0)//////java返回null，浏览器为undefined
       {
-        // error_password_alert();
-      } else {
-        folder_list.folder_data = response.data;
-        sort_file()
+        empty_folder.value=true;
+      }
+      else
+      {
+        empty_folder.value=false;
       }
     })
 
