@@ -22,11 +22,11 @@ NProgress.configure({
 
 
 const routes= [
-  // {
-  //   path: "/main",
-  //   redirect:"/login_page/l",
-  //   // alias:'/login_page/l'
-  // },
+  {
+    path: "/",
+    redirect:"/login_page/l",
+    // alias:'/login_page/l'
+  },
   {
     path: '/home',
     name: 'home',

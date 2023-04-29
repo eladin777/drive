@@ -68,7 +68,7 @@
 
     <!--↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓  新建文件夹对话框-->
     <el-dialog v-model="NewFolderDialogVisible" width="350px" title="新建文件夹" top="15%" class="EditNameDialog" style="border-radius: 15px">
-      <img class="file_icon_in_editName_dialog" src="../assets/默认文件夹.png" style=" margin-left:100px;width: 120px;margin-bottom: 20px">
+        <img class="file_icon_in_editName_dialog" style=" margin-left:85px;width: 140px;height: 140px" src="../assets/folder.png">
 
       <el-input type="text" v-model="file_name_in_new_folder_dialog" clearable style="--el-input-focus-border-color: #569b3f;"/>
 
