@@ -180,17 +180,17 @@ file.suffix!=='doc'&&file.suffix!=='docx'&&file.suffix!=='ppt'&&file.suffix!=='p
 
           <td class="file_infor_td" v-on:click="open_video_or_image(file)"  v-on:click.right="click_drop_down(file)" style="font-size: 14px;width: 75%;color: #c0c0c0;table-layout: fixed" >
             <div style="display: inline"  v-lazy-container="{ selector: 'img', loading: loading_image}">
-              <img class="file_icon" style="border-radius: 5px;width: 30px;" :data-src="show_thumbnail(file)" v-show="file.suffix=='jpg'||file.suffix=='png'||file.suffix=='jpeg'||file.suffix=='bmp'||file.suffix=='gif'">
+              <img class="file_icon" style="border-radius: 5px;width: 30px;margin-right: 15px" :data-src="show_thumbnail(file)" v-show="file.suffix=='jpg'||file.suffix=='png'||file.suffix=='jpeg'||file.suffix=='bmp'||file.suffix=='gif'">
             </div>
-            <img class="file_icon" style="width: 40px;height: 40px;vertical-align: -70%;margin-left: -5px" src="../assets/document.png"  v-show="file.suffix=='txt'||file.suffix=='ini'||file.suffix=='lua'||file.suffix=='json'">
-            <img class="file_icon" style="width: 40px;height: 40px;vertical-align: -70%;margin-left: -5px" src="../assets/music.png"  v-show="file.suffix=='mp3'||file.suffix=='wma'||file.suffix=='wav'||file.suffix=='ape'||file.suffix=='flac'">
-            <img class="file_icon" style="width: 40px;height: 40px;vertical-align: -70%;margin-left: -5px" src="../assets/zip.png"  v-show="file.suffix=='zip'||file.suffix=='7z'||file.suffix=='tar'||file.suffix=='rar'">
-            <img class="file_icon" style="width: 40px;height: 40px;vertical-align: -70%;margin-left: -5px" src="../assets/video.png"  v-show="file.suffix=='mov'||file.suffix=='mp4'||file.suffix=='avi'||file.suffix=='flv'||file.suffix=='wmv'||file.suffix=='mpeg'">
-            <img class="file_icon" style="width: 40px;height: 40px;vertical-align: -70%;margin-left: -5px" src="../assets/word.png"  v-show="file.suffix=='doc'||file.suffix=='docx'">
-            <img class="file_icon" style="width: 40px;height: 40px;vertical-align: -70%;margin-left: -5px" src="../assets/ppt.png"  v-show="file.suffix=='ppt'||file.suffix=='pptx'">
-            <img class="file_icon" style="width: 40px;height: 40px;vertical-align: -70%;margin-left: -5px" src="../assets/pdf.png"  v-show="file.suffix=='pdf'">
-            <img class="file_icon" style="width: 40px;height: 40px;vertical-align: -70%;margin-left: -5px" src="../assets/other.png"  v-show="file.suffix=='exe'">
-            <img class="file_icon" style="width: 40px;height: 40px;vertical-align: -70%;margin-left: -5px" src="../assets/other.png"  v-show="file.suffix!=='jpg'&&file.suffix!=='png'&&file.suffix!=='jpeg'&&file.suffix!=='bmp'&&file.suffix!=='gif'&&
+            <img class="file_icon" style="width: 40px;height: 40px;vertical-align: -80%;margin-left: -5px" src="../assets/document.png"  v-show="file.suffix=='txt'||file.suffix=='ini'||file.suffix=='lua'||file.suffix=='json'">
+            <img class="file_icon" style="width: 40px;height: 40px;vertical-align: -80%;margin-left: -5px" src="../assets/music.png"  v-show="file.suffix=='mp3'||file.suffix=='wma'||file.suffix=='wav'||file.suffix=='ape'||file.suffix=='flac'">
+            <img class="file_icon" style="width: 40px;height: 40px;vertical-align: -80%;margin-left: -5px" src="../assets/zip.png"  v-show="file.suffix=='zip'||file.suffix=='7z'||file.suffix=='tar'||file.suffix=='rar'">
+            <img class="file_icon" style="width: 40px;height: 40px;vertical-align: -80%;margin-left: -5px" src="../assets/video.png"  v-show="file.suffix=='mov'||file.suffix=='mp4'||file.suffix=='avi'||file.suffix=='flv'||file.suffix=='wmv'||file.suffix=='mpeg'">
+            <img class="file_icon" style="width: 40px;height: 40px;vertical-align: -80%;margin-left: -5px" src="../assets/word.png"  v-show="file.suffix=='doc'||file.suffix=='docx'">
+            <img class="file_icon" style="width: 40px;height: 40px;vertical-align: -80%;margin-left: -5px" src="../assets/ppt.png"  v-show="file.suffix=='ppt'||file.suffix=='pptx'">
+            <img class="file_icon" style="width: 40px;height: 40px;vertical-align: -80%;margin-left: -5px" src="../assets/pdf.png"  v-show="file.suffix=='pdf'">
+            <img class="file_icon" style="width: 40px;height: 40px;vertical-align: -80%;margin-left: -5px" src="../assets/other.png"  v-show="file.suffix=='exe'">
+            <img class="file_icon" style="width: 40px;height: 40px;vertical-align: -80%;margin-left: -5px" src="../assets/other.png"  v-show="file.suffix!=='jpg'&&file.suffix!=='png'&&file.suffix!=='jpeg'&&file.suffix!=='bmp'&&file.suffix!=='gif'&&
 file.suffix!=='txt'&&file.suffix!=='ini'&&file.suffix!=='lua'&&file.suffix!=='json'&&file.suffix!=='mp3'&&file.suffix!=='wma'&&file.suffix!=='wav'&&file.suffix!=='ape'&&file.suffix!=='flac'&&
 file.suffix!=='zip'&&file.suffix!=='7z'&&file.suffix!=='tar'&&file.suffix!=='rar'&&file.suffix!=='mov'&&file.suffix!=='mp4'&&file.suffix!=='avi'&&file.suffix!=='flv'&&file.suffix!=='wmv'&&file.suffix!=='mpeg'&&
 file.suffix!=='doc'&&file.suffix!=='docx'&&file.suffix!=='ppt'&&file.suffix!=='pptx'&&file.suffix!=='pdf'&&file.suffix!=='exe'">
@@ -1920,7 +1920,7 @@ function compare_create_time_asc(p){ //这是比较函数
   /*overflow: hidden;*/
   height: 27px;
   width: 27px;
-  vertical-align: -50%;
+  vertical-align: -45%;
 }
 
 
